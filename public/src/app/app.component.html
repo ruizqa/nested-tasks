@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RESTful Tasks API</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+
+  <div class="container section">
+    <h1 class="center">Restful Tasks CRUD</h1>
+    <div class="row">
+        <form (submit)="onSubmit($event)" class="col s12 l6 offset-l3">
+          <h3>New Task</h3>
+          <p> {{ newTask | json }} </p>
+          <div *ngIf="newError">
+            <p>{{newErrorMessage}}</p>
+          </div>
+          <div class="input-field">
+            <input name="title" id="title" type="text" class="validate" [(ngModel)]="newTask.title">
+            <label for="title" class="active">Title</label>
+          </div>
+          <div class="input-field">
+            <input name="description" type="text" class="validate" [(ngModel)]="newTask.description">
+            <label for="description" class="active">Description</label>
+          </div>
+          <div>
+          <label class="center">Completed?</label>
+          <p>
+            <label>
+              <input name="completed" type="radio" value="true" [(ngModel)]="newTask.completed" />
+              <span>Yes</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="completed" type="radio" value="false" [(ngModel)]="newTask.completed"/>
+              <span>No</span>
+            </label>
+          </p>
+          </div>
+          <div class="input-field">
+            <input name="created_at" type="date" class="datepicker" [(ngModel)]="newTask.created_at">
+            <label for="created_at">Created At</label>
+          </div>
+
+          <div class="input-field">
+            <input name="updated_at" type="date" class="datepicker" [(ngModel)]="newTask.updated_at">
+            <label for="updated_at">Updated At</label>
+          </div>
+
+          <div class="center">
+            <input type="submit" class="btn blue" value="Create" />
+         </div>
+        </form>
+    </div>
+
+
+ 
+
+
+    <div class="row">
+      <div class="col s12 l6">
+        <h3>Task List</h3>
+        <div *ngIf="displayTasks">
+          <div *ngFor="let task of tasks">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title">Task {{task['id']}}: {{task['title']}}</span>
+              </div>
+              <div class="card-action">
+                <a><button [name]="task['id']" class="btn left" (click) = "showTask($event)" >Show</button></a>
+                <a><button [name]="task['id']" class="btn center" (click) = "OnEdit($event)" >Edit</button></a>
+                <a><button [name]="task['id']" class="btn right" (click) = "Delete($event)">Delete</button></a>
+              </div>
+              <br>
+            </div>
+
+        </div>
+        </div>
+
+
+      </div>
+
+    
+      <div class="col s12 l6">
+
+      <app-nested-component *ngIf="showingTask" [taskToShow] = "task" ></app-nested-component>
+
+
+
+      <form (submit)="Edit($event)" *ngIf="editingTask">
+
+        <h3>Edit Task</h3>
+        <p> {{ task | json }} </p>
+        <div *ngIf="editError">
+          <p>{{editErrorMessage}}</p>
+        </div>
+        <input type="hidden" [value]="task.id">
+        <div class="input-field">
+          <input name="title" id="title" type="text" class="validate" [(ngModel)]="task.title">
+          <label for="title" class="active">Title</label>
+        </div>
+        <div class="input-field">
+          <input name="description" type="text" class="validate" [(ngModel)]="task.description">
+          <label for="description" class="active">Description</label>
+        </div>
+        <div>
+        <label class="center">Completed?</label>
+        <p>
+          <label>
+            <input name="completed" type="radio" value="true" (change)="task.completed = !task.completed"  [checked] ="task.completed == true"/>
+            <span>Yes</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="completed" type="radio" value="false" (change)="task.completed = !task.completed" [checked] ="task.completed == false"/>
+            <span>No</span>
+          </label>
+        </p>
+      </div>
+        <div class="input-field">
+          <input name="created_at" type="date" class="datepicker" [(ngModel)]="task.created_at">
+          <label for="created_at">Created At</label>
+        </div>
+
+        <div class="input-field">
+          <input name="updated_at" type="date" class="datepicker" [(ngModel)]="task.updated_at">
+          <label for="updated_at">Updated At</label>
+        </div>
+
+        <div class="center">
+          <input type="submit" class="btn blue" value="Edit" />
+      </div>
+      </form>
+      </div>
+    </div>
+
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+
